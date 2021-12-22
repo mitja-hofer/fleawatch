@@ -5,7 +5,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
 class bolhaAd(object):
-    def __init__(self, content):
+    def __init__(self, content, ad_href):
+        self.url = ad_href
         self.title = content.find_element_by_class_name("ClassifiedDetailSummary-title").text
         self.id = content.find_element_by_class_name("ClassifiedDetailSummary-adCode").text.split(" ")[-1]
         self.price = content.find_element_by_class_name("ClassifiedDetailSummary-priceDomestic").text
@@ -13,10 +14,19 @@ class bolhaAd(object):
         self.type = content.find_elements_by_css_selector("dd.ClassifiedDetailBasicDetails-listDefinition")[0].text
         self.location =content.find_elements_by_css_selector("dd.ClassifiedDetailBasicDetails-listDefinition")[1].text
         self.condition = content.find_elements_by_css_selector("dd.ClassifiedDetailBasicDetails-listDefinition")[2].text
+        self.tel = self.getTel(content)
         
     def __str__(self):
-        return f"{self.title}\nŠifra oglasa:\t{self.id}\nCena:\t{self.price}\nLokacija:\t{self.location}\n\n"
+        return f"{self.title}\nŠifra oglasa:\t{self.id}\nCena:\t{self.price}\nLokacija:\t{self.location}\nTel:\t{self.tel}\n\n"
     
+    def getImage(self, content):
+        img_cls = content.find_element_by_class_name("ClassifiedDetailGallery-slideImage")
+        return img_cls.screenshot_as_png
+
+    def getTel(self, content):    
+        content.find_element_by_class_name("link-tel--faux-teaser").click()
+        return content.find_element_by_class_name("ClassifiedDetailOwnerDetails-contactEntryLink").text
+        
 browser = webdriver.Firefox()
 try:
     keywords = "cestno kolo"
@@ -35,7 +45,7 @@ try:
         browser.get(ad_href)
         try: #new ad view
             content = browser.find_element_by_class_name("content-main")
-            a = bolhaAd(content)
+            a = bolhaAd(content, ad_href)
             print(a)
         except selenium.common.exceptions.NoSuchElementException:
             browser.find_element_by_class_name("base-entity")
