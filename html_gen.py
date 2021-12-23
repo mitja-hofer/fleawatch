@@ -3,6 +3,11 @@ def create_ads_list(ads):
     <h3>{ads.keywords}</h3>
     <h4>{ads.timestamp}</h4>
     """
+
+    if ads.ads == []:
+        list += "Na bolhi ni novih oglasov."
+        return list
+
     list += f"""<dl>"""
     for ad in ads.ads:
         list += f"""
@@ -11,7 +16,7 @@ def create_ads_list(ads):
         <dd>Lokacija: {ad.location}</dd>
         <dd>Kontakt: {ad.contact}</dd>
         <dd>Opis: {ad.description[:50]}</dd>
-        <dd>Link: <a href={ad.url}>Link</a>
+        <dd><a href="{ad.url["href"]}">Link</a>
         """
     list += "</dl>"
     return list

@@ -1,24 +1,29 @@
+import json
+
 from html_gen import *
 from send_mail import *
 from webcrawler import *
 
 def main():
-    seen_ad_ids = get_seen_ad_ids()
+    with open("subscribers.json", "r") as f:
+        subscribers = json.load(f)
+
     crawler = WebCrawler()
     try:
-        keywords_list = ["cestno kolo"]
-        ad_lists = ""
-        for keywords in keywords_list:
-            found_ads = crawler.search_bolha(keywords, seen_ad_ids)
-            ad_ids = [ad.id for ad in found_ads.ads]
-            seen_ad_ids.extend(ad_ids)
-            save_ad_ids(seen_ad_ids)
-            ad_lists += create_ads_list(found_ads)
-        
-        #create and send email
-        msg_html = create_msg_html(ad_lists)
-        message = create_message("mh7289@student.uni-lj.si", "test", msg_html)
-        send_msg(message)
+        for subscriber in subscribers:
+            seen_ad_ids = get_seen_ad_ids(subscriber["id"])
+            ad_lists = ""
+            for keywords in subscriber["keywords_list"]:
+                found_ads = crawler.search_bolha(keywords, seen_ad_ids)
+                ad_ids = [ad.id for ad in found_ads.ads]
+                seen_ad_ids.extend(ad_ids)
+                save_ad_ids(seen_ad_ids, subscriber["id"])
+                ad_lists += create_ads_list(found_ads)
+            
+            #create and send email
+            msg_html = create_msg_html(ad_lists)
+            message = create_message(subscriber["address"], "test", msg_html)
+            send_msg(subscriber["address"], message)
 
     finally:
         crawler.browser.quit()

@@ -13,7 +13,10 @@ class WebCrawler(object):
     
     def search_bolha(self, keywords, seen_ad_ids):
         self.browser.get(f"https://www.bolha.com/")
-        self.browser.find_element(By.ID, "didomi-notice-agree-button").click()
+        try:
+            self.browser.find_element(By.ID, "didomi-notice-agree-button").click()
+        except selenium.common.exceptions.NoSuchElementException: #cookies already accepted
+            pass
         el = self.browser.find_element(By.CLASS_NAME, "SearchBox-input")
         el.click()
         el.send_keys(keywords + Keys.RETURN)

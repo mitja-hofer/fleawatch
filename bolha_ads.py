@@ -36,13 +36,13 @@ class BolhaAd(object):
             return None
     
 
-def save_ad_ids(ad_ids):
-    with open("ads", "wb") as file:
+def save_ad_ids(ad_ids, recipient_id):
+    with open(f"ads/ads_{recipient_id}", "wb") as file:
         pickle.dump(ad_ids, file)
 
-def get_seen_ad_ids():
-    if os.path.isfile("ads"):
-        with open("ads", "rb") as file:
+def get_seen_ad_ids(recipient_id):
+    if os.path.isfile(f"ads_{recipient_id}"):
+        with open(f"ads/ads_{recipient_id}", "rb") as file:
             return pickle.load(file)
     return []
 
