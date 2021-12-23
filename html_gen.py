@@ -11,6 +11,7 @@ def create_ads_list(ads):
         <dd>Lokacija: {ad.location}</dd>
         <dd>Kontakt: {ad.contact}</dd>
         <dd>Opis: {ad.description[:50]}</dd>
+        <dd>Link: <a href={ad.url}>Link</a>
         """
     list += "</dl>"
     return list
