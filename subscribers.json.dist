@@ -1,0 +1,10 @@
+[
+    {
+        "address" : <address>,
+        "id" : <subscriber_id>,
+        "keywords_list": [
+            <keywords1>,
+            <keywords2>
+        ]
+    }
+]
